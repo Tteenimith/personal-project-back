@@ -12,15 +12,17 @@ const notFoundPage = require("./middlewares/not-found")
 
 //Route
 const auth = require("./routes/user-route")
+const adminRoute = require("./routes/admin-route")
 
 //middleware
+app.use(cors())
 app.use(morgan("dev"))
 app.use(express.json())
-app.use(cors())
 
 
 
 app.use('/api',auth)
+app.use("/api",adminRoute)
 
 
 
