@@ -24,18 +24,20 @@ model User {
   branch    Branch   @default(CENTER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  request   Request[]
+  
 }
 
 model Part {
-  id          Int             @id @default(autoincrement())
-  description String?
-  sr_number   String
-  image       String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  partItems   PartOnRequest[]
-  model       Model           @relation(fields: [modelId], references: [id], onDelete: Cascade)
-  modelId     Int
+  id        Int             @id @default(autoincrement())
+  name      String?
+  sr_number String
+  image     String?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  partItems PartOnRequest[]
+  model     Model           @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelId   Int
 }
 
 model Model {
@@ -50,8 +52,11 @@ model Request {
   id           Int             @id @default(autoincrement())
   date         DateTime
   location     String
+  delivery     String
   requestItems PartOnRequest[]
-  status       Status @default(PENDING)
+  user         User            @relation(fields: [userId], references: [id])
+  userId       Int
+  status       Status          @default(PENDING)
 }
 
 model PartOnRequest {

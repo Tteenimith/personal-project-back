@@ -6,7 +6,7 @@ const createError = require("../utils/create-error")
 
 exports.register = async(req,res,next) =>{
     try {
-        const {name , email , password , phone } = req.body
+        const {name , email , password,  phone , branch } = req.body
 
         // Validate req.body
         if (!email) {
@@ -31,7 +31,8 @@ exports.register = async(req,res,next) =>{
                 name,
                 email,
                 password:hashPassword,
-                phone
+                phone,
+                branch
             }
         })
         console.log(newUser)
@@ -84,5 +85,28 @@ exports.login = async(req,res,next) => {
         // res.send("hello login")
     } catch (error) {
         next(error)
+    }
+}
+
+
+exports.currentUser = async(req,res,next) => {
+    try {
+        const email = req.user.user.email
+        
+        const member = await prisma.user.findFirst({
+            where:{
+                email:email
+            },
+            select:{
+                id:true,
+                email:true,
+                role: true
+            }
+        })
+        console.log(email);
+        
+        res.json({member})
+    } catch (err) {
+        next(err)
     }
 }
